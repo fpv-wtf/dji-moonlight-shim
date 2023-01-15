@@ -3,6 +3,8 @@
 Stream games via Moonlight to your DJI FPV Goggles. Counterpart to
 [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded).
 
+![splash](assets/splash.png)
+
 ## Implementation
 
 Technically, this will accept any Annex B H.264 stream. The shim hosts a TCP
