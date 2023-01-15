@@ -20,7 +20,7 @@ struct connect_header_s {
 ```
 
 After which, it expects a stream of frames. Each frame should be sent prefixed
-with a 4-byte length header, followed by the frame data itself.
+with a `uint32_t` length header, followed by the frame data itself.
 
 ## License
 
