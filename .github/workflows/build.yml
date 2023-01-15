@@ -23,13 +23,10 @@ jobs:
       - name: Build .ipk
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: |
-          export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/:$PATH
-          ./build_ipk.sh
+        run: ./build_ipk.sh
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: |
-            ./ipk/build/*.ipk
+          name: dji-moonlight-shim-{{ github.ref_name }}.ipk
+          path: ./ipk/build/dji-moonlight-shim.ipk
