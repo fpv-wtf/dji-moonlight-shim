@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "hw/dji_display.h"
+#include "hw/dji_services.h"
 
 const uint32_t WIDTH = 1440;
 const uint32_t HEIGHT = 810;
@@ -47,7 +48,7 @@ static void gfx_toast_draw();
 void gfx_init() {
   display_state = malloc(sizeof(dji_display_state_t));
   memset(display_state, 0, sizeof(dji_display_state_t));
-  display_state->is_v2_goggles = 1;
+  display_state->is_v2_goggles = dji_goggles_are_v2();
 
   plane_bg = malloc(sizeof(dji_display_plane_t));
   memset(plane_bg, 0, sizeof(dji_display_plane_t));
