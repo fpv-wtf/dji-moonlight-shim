@@ -30,3 +30,37 @@ jobs:
         with:
           name: dji-moonlight-shim-${{ github.sha }}.ipk
           path: ./ipk/build/dji-moonlight-shim.ipk
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: dji-moonlight-shim-${{ github.sha }}.ipk
+
+      - name: Read metadata
+        run: |
+          VERSION=$(dpkg-deb -f ipk/build/dji-moonlight-shim.ipk Version)
+          ARCH=$(dpkg-deb -f ipk/build/dji-moonlight-shim.ipk Architecture)
+          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=arch::$ARCH"
+
+      - name: Rename release artifacts
+        run: |
+          PKG_NAME=dji-moonlight-shim_${{ steps.read-metadata.outputs.version }}_${{ steps.read-metadata.outputs.arch }}.ipk
+          mv dji-moonlight-shim-${{ github.sha }}.ipk $PKG_NAME
+          echo "::set-output name=package::$PKG_NAME"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ steps.rename.outputs.package }}
+
