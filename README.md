@@ -21,3 +21,10 @@ struct connect_header_s {
 
 After which, it expects a stream of frames. Each frame should be sent prefixed
 with a 4-byte length header, followed by the frame data itself.
+
+## License
+
+- DejaVu Sans, used for the toast font: see [LICENSE-DejaVuSans](assets/LICENSE-DejaVuSans).
+- Moonlight logo: see [LICENSE-Moonlight](assets/LICENSE-Moonlight).
+
+Everything else: see [LICENSE](LICENSE).
