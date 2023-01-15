@@ -74,7 +74,8 @@ void handle_client(int client_fd) {
       }
 
       if (frame_size > sizeof(frame_buf)) {
-        printf("Frame size too big\n");
+        printf("Frame size too big: %d (max: %d)\n", frame_size,
+               sizeof(frame_buf));
         frame_size = 0;
       }
     } else {
@@ -110,9 +111,6 @@ void handle_client(int client_fd) {
 }
 
 int main(int argc, char *argv[]) {
-  dji_stop_goggles(dji_goggles_are_v2());
-  usleep(1000000);
-
   dmi_pb_init(&pb_handle);
 
   gfx_init();

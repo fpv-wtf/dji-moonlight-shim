@@ -14,14 +14,15 @@ cmake \
 
 cmake --build ./build --config Release
 
+
 rm -rf ipk/build
 mkdir -p ipk/build
 
 cp -r ipk/control ipk/build
+cp -r ipk/data ipk/build
 cp -r ipk/debian-binary ipk/build
 tar -czf ipk/build/control.tar.gz -C ipk/build/control .
 
-mkdir -p ipk/build/data
 mkdir -p ipk/build/data/opt/moonlight
 
 cp -r ./build/dji-moonlight-shim ipk/build/data/opt/moonlight

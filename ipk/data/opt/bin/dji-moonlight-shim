@@ -1,0 +1,18 @@
+#!/bin/sh
+
+DEVICE=$(getprop ro.product.device)
+IS_V2=$(echo $DEVICE | grep -c "wm170_gls")
+
+if [ $IS_V2 -eq 1 ]; then
+  GLASSES_SERIVCE="dji.glasses_wm150_service"
+else
+  GLASSES_SERIVCE="dji.glasses_service"
+fi
+
+trap "setprop $GLASSES_SERIVCE 1" EXIT
+
+setprop $GLASSES_SERIVCE 0
+sleep 3
+
+cd /opt/moonlight
+./dji-moonlight-shim
