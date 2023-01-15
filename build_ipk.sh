@@ -8,7 +8,7 @@ mkdir ./build
 cmake \
   -S . \
   -B ./build \
-  -D CMAKE_TOOLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake \
+  -D CMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
   -D ANDROID_ABI=armeabi-v7a \
   -D ANDROID_PLATFORM=android-23 \
 
@@ -29,4 +29,4 @@ cp -r ./assets ipk/build/data/opt/moonlight
 
 tar -czf ipk/build/data.tar.gz -C ipk/build/data .
 
-tar -czf dji-moonlight-shim.ipk -C ipk/build debian-binary control.tar.gz data.tar.gz
+tar -czf ipk/build/dji-moonlight-shim.ipk -C ipk/build debian-binary control.tar.gz data.tar.gz

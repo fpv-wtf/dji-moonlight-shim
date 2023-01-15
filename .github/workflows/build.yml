@@ -1,0 +1,35 @@
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - '*'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build .ipk packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r23b
+
+      - name: Build .ipk
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/:$PATH
+          ./build_ipk.sh
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: |
+            ./ipk/*.ipk
