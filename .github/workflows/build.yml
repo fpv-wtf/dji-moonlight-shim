@@ -32,4 +32,4 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: |
-            ./ipk/*.ipk
+            ./ipk/build/*.ipk
