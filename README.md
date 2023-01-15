@@ -1,9 +1,11 @@
 # dji-moonlight-shim
 
-Stream games via Moonlight to your DJI FPV Goggles. Counterpart to
+Stream games via Moonlight to your DJI FPV Goggles. Friend of
 [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded).
 
 ![splash](assets/splash.png)
+
+Requires rooting via [fpv.wtf](https://github.com/fpv-wtf).
 
 ## Implementation
 
