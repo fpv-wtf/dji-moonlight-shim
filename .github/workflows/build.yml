@@ -28,5 +28,5 @@ jobs:
       - name: Upload release artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: dji-moonlight-shim-{{ github.ref_name }}.ipk
+          name: dji-moonlight-shim-${{ github.ref_name }}.ipk
           path: ./ipk/build/dji-moonlight-shim.ipk
