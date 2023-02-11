@@ -8,10 +8,9 @@ mkdir ./build
 cmake \
   -S . \
   -B ./build \
-  -D CMAKE_TOOLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake \
+  -D CMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
   -D ANDROID_ABI=armeabi-v7a \
-  -D ANDROID_PLATFORM=android-23 \
-  -D CMAKE_PREFIX_PATH=$HOME/libzmq/install/lib/cmake
+  -D ANDROID_PLATFORM=android-23
 
 cmake --build ./build --config Release
 

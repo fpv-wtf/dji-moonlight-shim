@@ -1,6 +1,7 @@
 Package: dji-moonlight-shim
-Version: 0.0.1
+Version: 0.0.1-alpha2
 Maintainer: Knifa
 Description: Moonlight Shim
 Architecture: pigeon-glasses
+Depends: fan-control
 Homepage: https://github.com/Knifa/dji-moonlight-shim
