@@ -10,8 +10,15 @@
 
 #include "gfx.h"
 
+#define MAGIC_HEADER 0x42069
+
+static FILE *usb_file = NULL;
+static FILE *net_file = NULL;
+
 static int net_listen_fd = 0;
 static struct sockaddr_in net_client_addr;
+static bool use_net = false;
+
 static dmi_pb_handle_t pb_handle;
 
 typedef struct connect_header_s {
@@ -21,21 +28,10 @@ typedef struct connect_header_s {
   uint32_t fps;
 } connect_header_t;
 
-void handle_client(int client_fd) {
-  connect_header_t connect_header;
-  memset(&connect_header, 0, sizeof(connect_header));
-  size_t recv_len =
-      recv(client_fd, &connect_header, sizeof(connect_header), MSG_WAITALL);
+static connect_header_t connect_header;
 
-  if (recv_len != sizeof(connect_header)) {
-    printf("Failed to get connect header\n");
-    return;
-  }
-
-  if (connect_header.magic != 0x42069) {
-    printf("Invalid connect header magic\n");
-    return;
-  }
+void handle_client(FILE *client_file) {
+  size_t recv_len;
 
   char toast_buf[256];
   sprintf(toast_buf, "%d x %d @ %d FPS", connect_header.width,
@@ -53,42 +49,38 @@ void handle_client(int client_fd) {
   header.payload_offset = sizeof(header);
   header.pts = 0;
 
-  uint8_t frame_buf[20000];
+  uint8_t frame_buf[1000000];
   uint32_t frame_size = 0;
-  uint32_t frame_offset = 0;
 
   while (1) {
     size_t recv_len = 0;
 
     if (frame_size == 0) {
-      recv_len = recv(client_fd, &frame_size, sizeof(frame_size), MSG_WAITALL);
+      recv_len = fread(&frame_size, sizeof(frame_size), 1, client_file);
+      // printf("Got frame size: %d\n", frame_size);
 
       if (recv_len == 0) {
         printf("Connection closed\n");
         break;
       }
 
-      if (recv_len != sizeof(frame_size)) {
+      if (recv_len != 1) {
         printf("Failed to get frame size\n");
-        frame_size = 0;
+        return;
       }
 
       if (frame_size > sizeof(frame_buf)) {
         printf("Frame size too big: %d (max: %d)\n", frame_size,
                sizeof(frame_buf));
-        frame_size = 0;
+        return;
       }
     } else {
-      recv_len = recv(client_fd, frame_buf + frame_offset, frame_size, 0);
-      frame_offset += recv_len;
+      recv_len = fread(frame_buf, frame_size, 1, client_file);
+      // printf("Got frame data (%d).\n", recv_len);
 
       if (recv_len == 0) {
-        printf("Connection closed\n");
+        printf("Connection error\n");
         break;
-      }
-
-      if (frame_offset < frame_size) {
-        continue;
       }
 
       header.payload_lenth = frame_size;
@@ -102,7 +94,6 @@ void handle_client(int client_fd) {
       gfx_toast_tick();
 
       frame_size = 0;
-      frame_offset = 0;
     }
   }
 
@@ -110,12 +101,7 @@ void handle_client(int client_fd) {
   gfx_splash_show();
 }
 
-int main(int argc, char *argv[]) {
-  dmi_pb_init(&pb_handle);
-
-  gfx_init();
-  gfx_splash_show();
-
+void do_net() {
   net_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 
   struct sockaddr_in net_sockaddr;
@@ -141,6 +127,7 @@ int main(int argc, char *argv[]) {
       socklen_t net_client_addr_len = sizeof(net_client_addr);
       int client_fd = accept(net_listen_fd, (struct sockaddr *)&net_client_addr,
                              &net_client_addr_len);
+      net_file = fdopen(client_fd, "r+");
 
       char ip_str[INET_ADDRSTRLEN];
       inet_ntop(AF_INET, &(net_client_addr.sin_addr), ip_str, INET_ADDRSTRLEN);
@@ -148,11 +135,90 @@ int main(int argc, char *argv[]) {
       sprintf(toast_buf, "Connection from %s!", ip_str);
       gfx_toast(toast_buf);
 
-      handle_client(client_fd);
+      memset(&connect_header, 0, sizeof(connect_header));
+      size_t recv_len =
+          recv(client_fd, &connect_header, sizeof(connect_header), MSG_WAITALL);
+
+      if (recv_len != sizeof(connect_header)) {
+        printf("Failed to get connect header\n");
+      } else if (connect_header.magic != 0x42069) {
+        printf("Invalid connect header magic\n");
+      } else {
+        handle_client(net_file);
+      }
+
+      close(client_fd);
+      fclose(net_file);
+      client_fd = -1;
+      net_file = NULL;
 
       sprintf(toast_buf, "Connection lost!");
       gfx_toast(toast_buf);
     }
+  }
+}
+
+void do_usb() {
+  usb_file = fopen("/dev/usb-ffs/bulk/ep1", "r");
+
+  printf("Waiting for alignment...\n");
+
+  // Seek out magic bytes to sync alignment
+  uint8_t magic_cur;
+  uint32_t magic_expected = MAGIC_HEADER;
+  size_t magic_pos = 0;
+  while (magic_pos != sizeof(magic_expected)) {
+    uint8_t magic_expected_cur = (magic_expected >> (magic_pos * 8)) & 0xFF;
+    fread(&magic_cur, sizeof(magic_cur), 1, usb_file);
+    printf("Got byte: %x, expected: %x\n", magic_cur, magic_expected_cur);
+    if (magic_cur == magic_expected_cur) {
+      magic_pos++;
+    } else {
+      magic_pos = 0;
+    }
+  }
+
+  printf("Got alignment!\n");
+
+  memset(&connect_header, 0, sizeof(connect_header));
+  connect_header.magic = MAGIC_HEADER;
+
+  size_t recv_len =
+      fread((void *)&connect_header + sizeof(uint32_t),
+            sizeof(connect_header) - sizeof(uint32_t), 1, usb_file);
+
+  handle_client(usb_file);
+}
+
+int main(int argc, char *argv[]) {
+  if (argc > 1) {
+    if (strcmp(argv[1], "--net") == 0) {
+      use_net = true;
+    } else if (strcmp(argv[1], "--usb") == 0) {
+      use_net = false;
+    } else {
+      printf("Usage: %s [--net|--usb] (default usb)", argv[0]);
+      return 1;
+    }
+  }
+
+  dmi_pb_init(&pb_handle);
+
+  gfx_init();
+  gfx_splash_show();
+
+  if (use_net) {
+    printf("Using network mode\n");
+    gfx_toast("Using network mode...");
+    gfx_toast_tick();
+
+    do_net();
+  } else {
+    printf("Using USB mode\n");
+    gfx_toast("Using USB mode...");
+    gfx_toast_tick();
+
+    do_usb();
   }
 
   dmi_pb_deinit(&pb_handle);
