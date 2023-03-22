@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/system/bin/sh
 
 DEVICE=$(getprop ro.product.device)
 IS_V2=$(echo $DEVICE | grep -c "wm170_gls")
@@ -15,4 +15,6 @@ setprop $GLASSES_SERIVCE 0
 sleep 3
 
 cd /opt/moonlight
-./dji-moonlight-shim
+./dji-moonlight-shim $@
+
+setprop $GLASSES_SERIVCE 1
