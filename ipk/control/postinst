@@ -2,15 +2,16 @@
 
 # Reboot glasses service to pick up menu entry.
 
-IS_V2=$(getprop ro.product.device | grep -c "wm170_gls")
-if [ $IS_V2 -eq 1 ]; then
+DEVICE=$(getprop ro.product.device)
+
+if [[ $DEVICE == *"wm170_gls"* ]]; then
   GLASSES_SERIVCE="dji.glasses_wm150_service"
 else
   GLASSES_SERIVCE="dji.glasses_service"
 fi
 
 IS_GLASSES_RUNNING=$(getprop $GLASSES_SERIVCE)
-if [ $IS_GLASSES_RUNNING -eq 1 ]; then
+if [[ $IS_GLASSES_RUNNING -eq 1 ]]; then
   setprop $GLASSES_SERIVCE 0
   sleep 3
   setprop $GLASSES_SERIVCE 1

@@ -1,7 +1,7 @@
 Package: dji-moonlight-shim
-Version: 1.0.1
+Version: 1.0.2
 Maintainer: Knifa
-Description: Accepts H.264 frames over network/USB from Moonlight.
+Description: Stream games to your goggles via Moonlight!
 Architecture: pigeon-glasses
 Depends: fan-control wtfos-modloader
 Homepage: https://github.com/Knifa/dji-moonlight-shim

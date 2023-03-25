@@ -5,9 +5,8 @@ set -euo pipefail
 # Figure out which glasses service we have to toggle.
 
 DEVICE=$(getprop ro.product.device)
-IS_V2=$(echo $DEVICE | grep -c "wm170_gls")
 
-if [ $IS_V2 -eq 1 ]; then
+if [[ $DEVICE == *"wm170_gls"* ]]; then
   GLASSES_SERIVCE="dji.glasses_wm150_service"
 else
   GLASSES_SERIVCE="dji.glasses_service"
@@ -18,7 +17,7 @@ fi
 set +e # don't choke if something goes wrong with package-config
 
 USE_USB_MODE=$(package-config getsaved dji-moonlight-shim use_usb_mode)
-if [ $USE_USB_MODE = "true" ]; then
+if [[ $USE_USB_MODE == "true" ]]; then
   echo "USB mode has been enabled via package-config."
   USE_USB_MODE=1
 else
@@ -30,8 +29,8 @@ set -e
 # Construct the shim arguments. If this script is called with arguments, pass
 # them, otherwise pass --net or --usb depending on the package config.
 
-if [ $# -eq 0 ]; then
-  if [ $USE_USB_MODE -eq 1 ]; then
+if [[ $# -eq 0 ]]; then
+  if [[ $USE_USB_MODE -eq 1 ]]; then
     SHIM_ARGS="--usb"
   else
     SHIM_ARGS="--net"
@@ -41,7 +40,6 @@ else
 fi
 
 # Start the shim.
-
 
 function cleanup {
   sleep 3
