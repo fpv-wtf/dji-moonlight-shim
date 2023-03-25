@@ -1,16 +1,45 @@
 # dji-moonlight-shim
 
-Stream games via Moonlight to your DJI FPV Goggles. Friend of
+Stream games via Moonlight and [fpv.wtf](https://github.com/fpv-wtf) to your DJI
+FPV Goggles. Friend of
 [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded).
 
 ![splash](assets/splash.png)
 
-Requires rooting via [fpv.wtf](https://github.com/fpv-wtf).
+This is fairly experimental still. Expect some weirdness! Latency is good
+though, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
+
+![latency](assets/latency.gif)
 
 ## Usage
 
-1. Install the package.
-2. Connect to the goggles via ADB and run the shim.
+### Setup
+
+1. Go to [fpv.wtf](https://fpv.wtf/) with your goggles connected and powered up.
+2. Update WTFOS and friends to the latest version.
+3. Install `dji-moonlight-shim` via the package mangaer.
+4. Reboot your goggles.
+
+### Starting
+
+1. Select `Moonlight` from the menu.
+
+    ![menu](assets/menu.jpg)
+
+2. Use [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded)
+   to stream video to the shim.
+
+### Stopping
+
+1. You can never leave.
+2. It will be this way forever.
+3. Breathe.
+4. ???
+5. Reboot your goggles.
+
+### CLI
+
+1. You can also start the shim via ADB.
 
     ```bash
     $ dji-moonlight-shim
@@ -21,16 +50,14 @@ Requires rooting via [fpv.wtf](https://github.com/fpv-wtf).
     # ...or network mode.
     $ dji-moonlight-shim --net
     ```
-
-3. Use [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded)
-   to stream video to the shim.
+2. Ctrl-C to stop and restart the glasses service.
 
 ## Configuration
 
 The shim can be configured via `package-config`:
 
-- `use_usb_mode`: Use USB mode by default instead of the network mode. Defaults to
-  `false`.
+- `use_usb_mode`: Use USB mode by default instead of the network mode. Defaults
+  to `false`.
 
 ## Implementation
 
@@ -79,8 +106,8 @@ can't co-exist so this wrapper handles stopping (and restarting) it.
 
 ### Decoder
 
-Everything around decoding lives in [dmi](./src/dmi) and is probably the best way to
-understand how this works. Start from [dmi_pb.c](./src/dmi/dmi_pb.c).
+Everything around decoding lives in [dmi](./src/dmi) and is probably the best
+way to understand how this works. Start from [dmi_pb.c](./src/dmi/dmi_pb.c).
 
 It's driven through a handful of devices via ioctl/iomap:
   - `/dev/dmi_media_control`: general control, starting/stoping the decoder,
