@@ -1,0 +1,11 @@
+{
+	"settings": {
+		"use_usb_mode": {
+			"name": "Use USB Mode (experimental)",
+			"widget": "checkbox"
+		}
+	},
+	"units": [
+		"dji-moonlight-shim"
+	]
+}

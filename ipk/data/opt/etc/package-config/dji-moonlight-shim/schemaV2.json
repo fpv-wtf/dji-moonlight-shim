@@ -1,0 +1,21 @@
+{
+    "description": "Configure dji-moonlight-shim",
+    "dependencies": {},
+    "properties": {
+        "use_usb_mode": {
+            "enum": [
+                true,
+                false
+            ],
+            "title": "Use USB mode (experimental)",
+            "description": "Runs the shim in USB mode, where frames are expected over USB directly rather than of over the network.",
+            "type": "boolean"
+        }
+    },
+    "required": [],
+    "title": "dji-moonlight-shim",
+    "type": "object",
+    "units": [
+        "dji-moonlight-shim"
+    ]
+}
