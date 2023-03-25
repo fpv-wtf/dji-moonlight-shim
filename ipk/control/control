@@ -1,5 +1,5 @@
 Package: dji-moonlight-shim
-Version: 1.0.0
+Version: 1.0.1
 Maintainer: Knifa
 Description: Accepts H.264 frames over network/USB from Moonlight.
 Architecture: pigeon-glasses
