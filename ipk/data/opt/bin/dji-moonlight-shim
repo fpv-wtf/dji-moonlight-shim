@@ -17,7 +17,7 @@ fi
 
 set +e # don't choke if something goes wrong with package-config
 
-USE_USB_MODE=$(package-config get dji-moonlight-shim use_usb_mode)
+USE_USB_MODE=$(package-config getsaved dji-moonlight-shim use_usb_mode)
 if [ $USE_USB_MODE = "true" ]; then
   echo "USB mode has been enabled via package-config."
   USE_USB_MODE=1
