@@ -53,7 +53,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
 ## Configuration
 
-The shim can be configured via `package-config`:
+The shim can be configured via the [fpv.wtf](https://fpv.wtf/) package manager.
 
 - `use_usb_mode`: Use USB mode by default instead of the network mode. Defaults
   to `false`.
