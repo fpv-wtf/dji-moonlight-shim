@@ -8,7 +8,7 @@ FPV Goggles. Friend of
 
 Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
-![latency](assets/latency.gif)
+![latency](media/latency.gif)
 
 ## Usage
 
@@ -23,7 +23,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
 1. Select `Moonlight` from the menu.
 
-    ![menu](assets/menu.jpg)
+    ![menu](media/menu.jpg)
 
 2. Use [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded)
    to stream video to the shim.
