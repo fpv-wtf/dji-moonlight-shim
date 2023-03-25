@@ -6,8 +6,9 @@ FPV Goggles. Friend of
 
 ![splash](assets/splash.png)
 
-This is fairly experimental still. Expect some weirdness! Latency is good
-though, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
+This is fairly experimental still. Expect some weirdness!
+
+Latency is good though, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
 ![latency](assets/latency.gif)
 
