@@ -35,4 +35,4 @@ VERSION=$(cat ipk/control/control | grep Version | cut -d' ' -f2)
 ARCH=$(cat ipk/control/control | grep Architecture | cut -d' ' -f2)
 PKG_NAME=dji-moonlight-shim_${VERSION}_${ARCH}.ipk
 
-tar -czf ipk/build/$PKG_NAME -C ipk/build debian-binary control.tar.gz data.tar.gz
+tar -czf ipk/build/$PKG_NAME -C ipk/build ./debian-binary ./control.tar.gz ./data.tar.gz
