@@ -17,7 +17,6 @@ static FILE *net_file = NULL;
 
 static int net_listen_fd = 0;
 static struct sockaddr_in net_client_addr;
-static bool use_net = false;
 
 static dmi_pb_handle_t pb_handle;
 
@@ -191,13 +190,16 @@ void do_usb() {
 }
 
 int main(int argc, char *argv[]) {
+  bool use_usb = false;
+
   if (argc > 1) {
     if (strcmp(argv[1], "--net") == 0) {
-      use_net = true;
+      // 200% definitely not usb
+      use_usb = false;
     } else if (strcmp(argv[1], "--usb") == 0) {
-      use_net = false;
+      use_usb = true;
     } else {
-      printf("Usage: %s [--net|--usb] (default usb)\n", argv[0]);
+      printf("Usage: %s [--net|--usb] (default net)\n", argv[0]);
       return 1;
     }
   }
@@ -207,18 +209,18 @@ int main(int argc, char *argv[]) {
   gfx_init();
   gfx_splash_show();
 
-  if (use_net) {
-    printf("Using network mode\n");
-    gfx_toast("Using network mode...");
-    gfx_toast_tick();
-
-    do_net();
-  } else {
+  if (use_usb) {
     printf("Using USB mode\n");
     gfx_toast("Using USB mode...");
     gfx_toast_tick();
 
     do_usb();
+  } else {
+    printf("Using network mode\n");
+    gfx_toast("Using network mode...");
+    gfx_toast_tick();
+
+    do_net();
   }
 
   dmi_pb_deinit(&pb_handle);
