@@ -60,8 +60,8 @@ followed by the rest of the stream. After that though, it's got no idea.
 
 ### Decoder
 
-Everything around decoding lives in [dmi](./dmi) and is probably the best way to
-understand how this works, but roughly:
+Everything around decoding lives in [dmi](./src/dmi) and is probably the best way to
+understand how this works. Start from [dmi_pb.c](./src/dmi/dmi_pb.c).
 
 It's driven through a handful of devices via ioctl/iomap:
   - `/dev/dmi_media_control`: general control, starting/stoping the decoder,
