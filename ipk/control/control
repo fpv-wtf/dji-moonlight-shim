@@ -1,7 +1,7 @@
 Package: dji-moonlight-shim
-Version: 0.0.1-alpha3
+Version: 1.0.0
 Maintainer: Knifa
-Description: Moonlight Shim
+Description: Accepts H.264 frames over network/USB from Moonlight.
 Architecture: pigeon-glasses
 Depends: fan-control wtfos-modloader
 Homepage: https://github.com/Knifa/dji-moonlight-shim
