@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[1], "--usb") == 0) {
       use_net = false;
     } else {
-      printf("Usage: %s [--net|--usb] (default usb)", argv[0]);
+      printf("Usage: %s [--net|--usb] (default usb)\n", argv[0]);
       return 1;
     }
   }
