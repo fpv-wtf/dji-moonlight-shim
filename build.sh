@@ -21,4 +21,4 @@ adb push ./assets /tmp/assets
 adb shell "setprop persist.dji.storage.exportable 0"
 adb shell "setprop dji.glasses_wm150_service 0"
 adb shell "chmod +x /tmp/dji-moonlight-shim"
-adb shell "cd /tmp; LD_LIBRARY_PATH=/tmp ./dji-moonlight-shim"
+adb shell "cd /tmp; LD_LIBRARY_PATH=/tmp ./dji-moonlight-shim --net"
