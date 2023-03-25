@@ -1,0 +1,2 @@
+#!/system/bin/sh
+/opt/sbin/dinitctl -u stop dji-moonlight-shim || true

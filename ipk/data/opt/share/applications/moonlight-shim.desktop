@@ -1,5 +1,0 @@
-[Desktop Entry]
-Exec=/opt/sbin/dinitctl start moonlight-shim
-Name=Moonlight
-Icon=/opt/share/applications/moonlight-shim.png
-Icon_Active=/opt/share/applications/moonlight-shim-active.png

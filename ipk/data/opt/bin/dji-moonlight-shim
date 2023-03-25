@@ -42,12 +42,17 @@ fi
 
 # Start the shim.
 
-trap "setprop $GLASSES_SERIVCE 1" EXIT
+
+function cleanup {
+  sleep 3
+  setprop $GLASSES_SERIVCE 1
+  exit 0
+}
+
+trap cleanup EXIT INT TERM
 
 setprop $GLASSES_SERIVCE 0
 sleep 3
 
 cd /opt/moonlight
 ./dji-moonlight-shim $SHIM_ARGS
-
-setprop $GLASSES_SERIVCE 1
