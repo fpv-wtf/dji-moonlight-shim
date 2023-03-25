@@ -12,12 +12,25 @@ Requires rooting via [fpv.wtf](https://github.com/fpv-wtf).
 1. Install the package.
 2. Connect to the goggles via ADB and run the shim.
 
-    ```sh
+    ```bash
     $ dji-moonlight-shim
+
+    # You can also force USB mode
+    $ dji-moonlight-shim --usb
+
+    # ...or network mode.
+    $ dji-moonlight-shim --net
     ```
 
 3. Use [dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded)
    to stream video to the shim.
+
+## Configuration
+
+The shim can be configured via `package-config`:
+
+- `use_usb_mode`: Use USB mode by default instead of the network mode. Defaults to
+  `false`.
 
 ## Implementation
 
@@ -57,6 +70,12 @@ Currently, there's no way to tell if the USB side has connected or disconnected,
 so on startup the shim just waits for the magic number to appear in this file,
 at which point it assumes it's about to get the rest of the connect header,
 followed by the rest of the stream. After that though, it's got no idea.
+
+### Booting
+
+The `dji-moonlight-shim` that gets popped into `/opt/bin` is actually a wrapper
+around the actual binary in `/opt/moonlight/`. The glasses service and the shim
+can't co-exist so this wrapper handles stopping (and restarting) it.
 
 ### Decoder
 
