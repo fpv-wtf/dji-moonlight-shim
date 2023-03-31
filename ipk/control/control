@@ -1,7 +1,7 @@
 Package: dji-moonlight-shim
-Version: 1.0.2
+Version: 1.0.3
 Maintainer: Knifa
 Description: Stream games to your goggles via Moonlight!
 Architecture: pigeon-glasses
-Depends: fan-control wtfos-modloader
+Depends: fan-control, wtfos-modloader
 Homepage: https://github.com/Knifa/dji-moonlight-shim
