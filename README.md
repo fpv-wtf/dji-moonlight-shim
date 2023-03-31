@@ -16,8 +16,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
 1. Go to [fpv.wtf](https://fpv.wtf/) with your goggles connected and powered up.
 2. Update WTFOS and friends to the latest version.
-3. Install `dji-moonlight-shim` via the package mangaer.
-4. Reboot your goggles.
+3. Install [dji-moonlight-shim](https://fpv.wtf/package/fpv-wtf/dji-moonlight-shim) via the package mangaer.
 
 ### Starting
 
@@ -53,7 +52,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
 ## Configuration
 
-The shim can be configured via the [fpv.wtf](https://fpv.wtf/) package manager.
+The shim can be configured via the [fpv.wtf](https://fpv.wtf/package/fpv-wtf/dji-moonlight-shim) package manager.
 
 - `use_usb_mode`: Use USB mode by default instead of the network mode. Defaults
   to `false`.
