@@ -30,7 +30,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 ### Stopping
 
 1. You can never leave.
-2. It will be this way forever.
+2. ...but it won't be this way forever.
 3. Breathe.
 4. ???
 5. Reboot your goggles.
@@ -42,10 +42,10 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
     ```bash
     $ dji-moonlight-shim
 
-    # You can also force USB mode
+    # You can also force BULK (previously called USB) mode
     $ dji-moonlight-shim --usb
 
-    # ...or network mode.
+    # ...or RNDIS mode.
     $ dji-moonlight-shim --net
     ```
 2. Ctrl-C to stop and restart the glasses service.
@@ -54,7 +54,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 
 The shim can be configured via the [fpv.wtf](https://fpv.wtf/package/fpv-wtf/dji-moonlight-shim) package manager.
 
-- `use_usb_mode`: Use USB mode by default instead of the network mode. Defaults
+- `use_usb_mode`: Use BULK (previously called USB) mode by default instead of the RNDIS mode. Defaults
   to `false`.
 
 ## Implementation
