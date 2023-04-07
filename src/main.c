@@ -210,14 +210,14 @@ int main(int argc, char *argv[]) {
   gfx_splash_show();
 
   if (use_usb) {
-    printf("Using USB mode\n");
-    gfx_toast("Using USB mode...");
+    printf("Using BULK mode\n");
+    gfx_toast("Using BULK mode...");
     gfx_toast_tick();
 
     do_usb();
   } else {
-    printf("Using network mode\n");
-    gfx_toast("Using network mode...");
+    printf("Using RNDIS mode\n");
+    gfx_toast("Using RNDIS mode...");
     gfx_toast_tick();
 
     do_net();

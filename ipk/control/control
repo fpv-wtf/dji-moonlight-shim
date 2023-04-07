@@ -1,5 +1,5 @@
 Package: dji-moonlight-shim
-Version: 1.0.4
+Version: 1.0.5
 Maintainer: Knifa
 Description: Stream games to your goggles via Moonlight!
 Architecture: pigeon-glasses

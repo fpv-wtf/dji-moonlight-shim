@@ -7,8 +7,8 @@
                 true,
                 false
             ],
-            "title": "Use USB mode (experimental)",
-            "description": "Runs the shim in USB mode, where frames are expected over USB directly rather than of over the network.",
+            "title": "Use BULK mode (experimental)",
+            "description": "Runs the shim in BULK mode, where frames are expected over BULK rather than over RNDIS.",
             "type": "boolean"
         }
     },
