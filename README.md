@@ -3,6 +3,8 @@
 Stream games via Moonlight and [fpv.wtf](https://github.com/fpv-wtf) to your DJI
 FPV Goggles!
 
+![splash](media/logo.png)
+
 The DJI Moonlight project is made up of three parts:
 
 - **[dji-moonlight-shim](https://github.com/fpv-wtf/dji-moonlight-shim)**: a
@@ -13,10 +15,6 @@ The DJI Moonlight project is made up of three parts:
 - [dji-moonlight-embedded](https://github.com/fpv-wtf/dji-moonlight-embedded): a
   fork of Moonlight Embedded that can stream to the shim. The GUI app uses this
   internally.
-
----
-
-![splash](media/logo.png)
 
 Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GeForce
 Experience).
@@ -39,7 +37,9 @@ Experience).
 
 1. Connect your goggles to your PC via USB.
 2. Select `Moonlight` from the menu.
+
    ![menu](media/menu.jpg)
+
 3. The shim will start and wait for a connection.
 4. Use [dji-moonlight-gui](https://github.com/fpv-wtf/dji-moonlight-gui) to
    stream video from your PC.
