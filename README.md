@@ -1,12 +1,25 @@
 # dji-moonlight-shim
 
 Stream games via Moonlight and [fpv.wtf](https://github.com/fpv-wtf) to your DJI
-FPV Goggles. Friend of
-[dji-moonlight-embedded](https://github.com/Knifa/dji-moonlight-embedded).
+FPV Goggles!
+
+The DJI Moonlight project is made up of three parts:
+
+- **[dji-moonlight-shim](https://github.com/fpv-wtf/dji-moonlight-shim)**: a
+  goggle-side app that displays a video stream coming in over USB. _You are
+  here._
+- **[dji-moonlight-gui](https://github.com/fpv-wtf/dji-moonlight-gui)**: a
+  Windows app that streams games to the shim via Moonlight and friends.
+- [dji-moonlight-embedded](https://github.com/fpv-wtf/dji-moonlight-embedded): a
+  fork of Moonlight Embedded that can stream to the shim. The GUI app uses this
+  internally.
+
+---
 
 ![splash](media/logo.png)
 
-Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
+Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GeForce
+Experience).
 
 ![latency](media/latency.gif)
 
@@ -15,19 +28,22 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
 ### Setup
 
 1. Go to [fpv.wtf](https://fpv.wtf/) with your goggles connected and powered up.
-2. Update WTFOS and friends to the latest version.
-3. Install [dji-moonlight-shim](https://fpv.wtf/package/fpv-wtf/dji-moonlight-shim) via the package mangaer.
+2. Update WTFOS to the latest version.
+3. Install
+   [dji-moonlight-shim](https://fpv.wtf/package/fpv-wtf/dji-moonlight-shim) via
+   the package mangaer.
+4. Continue to [dji-moonlight-gui](https://github.com/fpv-wtf/dji-moonlight-gui)
+   for PC-side setup.
 
 ### Running
 
-1. Select `Moonlight` from the menu.
-
+1. Connect your goggles to your PC via USB.
+2. Select `Moonlight` from the menu.
    ![menu](media/menu.jpg)
-
-2. The shim will be awaiting a connection from both BULK or RNDIS.
-3. Use [dji-moonlight-gui](https://github.com/fpv-wtf/dji-moonlight-gui)
-   to stream video from your PC.
-4. Press the BACK button on the goggles to exit at any time.
+3. The shim will start and wait for a connection.
+4. Use [dji-moonlight-gui](https://github.com/fpv-wtf/dji-moonlight-gui) to
+   stream video from your PC.
+5. Press the BACK button on the goggles to exit the shim at any time.
 
 ## Implementation
 
@@ -83,11 +99,9 @@ way to understand how this works. Start from [dmi_pb.c](./src/dmi/dmi_pb.c).
 
 It's driven through a handful of devices via ioctl/iomap:
 
-- `/dev/dmi_media_control`: general control, starting/stoping the decoder,
-  etc.
+- `/dev/dmi_media_control`: general control, starting/stoping the decoder, etc.
 - `/dev/dmi_video_playback`: the place where frames go.
-- `/dev/mem`: general shared mem, mainly just for frame timing info here
-  though.
+- `/dev/mem`: general shared mem, mainly just for frame timing info here though.
 
 The setup is roughly:
 
