@@ -25,7 +25,7 @@ Latency is good, in the 7-14ms range at 120Hz (w/ 5900X + 3080Ti via GE).
    ![menu](media/menu.jpg)
 
 2. The shim will be awaiting a connection from both BULK or RNDIS.
-3. Use [dji-moonlight-gui](https://github.com/Knifa/dji-moonlight-gui)
+3. Use [dji-moonlight-gui](https://github.com/fpv-wtf/dji-moonlight-gui)
    to stream video from your PC.
 4. Press the BACK button on the goggles to exit at any time.
 
