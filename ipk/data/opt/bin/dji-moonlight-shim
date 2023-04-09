@@ -12,33 +12,6 @@ else
   GLASSES_SERIVCE="dji.glasses_service"
 fi
 
-# Check if we should use USB mode.
-
-set +e # don't choke if something goes wrong with package-config
-
-USE_USB_MODE=$(package-config getsaved dji-moonlight-shim use_usb_mode)
-if [[ $USE_USB_MODE == "true" ]]; then
-  echo "USB mode has been enabled via package-config."
-  USE_USB_MODE=1
-else
-  USE_USB_MODE=0
-fi
-
-set -e
-
-# Construct the shim arguments. If this script is called with arguments, pass
-# them, otherwise pass --net or --usb depending on the package config.
-
-if [[ $# -eq 0 ]]; then
-  if [[ $USE_USB_MODE -eq 1 ]]; then
-    SHIM_ARGS="--usb"
-  else
-    SHIM_ARGS="--net"
-  fi
-else
-  SHIM_ARGS="$@"
-fi
-
 # Start the shim.
 
 function cleanup {
@@ -53,4 +26,4 @@ setprop $GLASSES_SERIVCE 0
 sleep 3
 
 cd /opt/moonlight
-./dji-moonlight-shim $SHIM_ARGS
+./dji-moonlight-shim
