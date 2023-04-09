@@ -1,17 +1,7 @@
 {
     "description": "Configure dji-moonlight-shim",
     "dependencies": {},
-    "properties": {
-        "use_usb_mode": {
-            "enum": [
-                true,
-                false
-            ],
-            "title": "Use BULK mode (experimental)",
-            "description": "Runs the shim in BULK mode, where frames are expected over BULK rather than over RNDIS.",
-            "type": "boolean"
-        }
-    },
+    "properties": {},
     "required": [],
     "title": "dji-moonlight-shim",
     "type": "object",

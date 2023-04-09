@@ -1,10 +1,5 @@
 {
-	"settings": {
-		"use_usb_mode": {
-			"name": "Use BULK Mode (experimental)",
-			"widget": "checkbox"
-		}
-	},
+	"settings": {},
 	"units": [
 		"dji-moonlight-shim"
 	]
