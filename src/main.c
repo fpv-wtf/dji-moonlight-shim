@@ -24,6 +24,8 @@
 #define FRAME_TYPE_I 0x01
 #define FRAME_TYPE_WAIT 0xFF
 
+#define ACCEPTABLE_FRAME_TIME 50000000
+
 typedef enum {
   STATE_CONNECT,
   STATE_HEADER_MAGIC,
@@ -202,7 +204,7 @@ void handle_data() {
                     (now.tv_nsec - last_frame_time.tv_nsec);
     last_frame_time = now;
 
-    if (header.is_first_frm != 1 && diff >= connect_header.fps * 50000000 &&
+    if (header.is_first_frm != 1 && diff >= ACCEPTABLE_FRAME_TIME &&
         frame_type != FRAME_TYPE_I) {
       printf("Dropping frame, %llums >= 50ms\n", diff / 1000000);
       sprintf(toast_buf, "Dropping frame, diff: %llums >= 50ms",
