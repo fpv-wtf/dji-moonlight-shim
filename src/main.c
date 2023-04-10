@@ -20,6 +20,10 @@
 #define MAGIC_HEADER 0x42069
 #define KEY_DJI_BACK 0xc9
 
+#define FRAME_TYPE_P 0x00
+#define FRAME_TYPE_I 0x01
+#define FRAME_TYPE_WAIT 0xFF
+
 typedef enum {
   STATE_CONNECT,
   STATE_HEADER_MAGIC,
@@ -45,9 +49,11 @@ void usb_thread(int fd);
 
 static int active_fd = -1;
 static int usb_fd = -1;
-static int watch_fd = -1;
+static int watch_timer_fd = -1;
 static int net_listen_fd, net_client_fd = -1;
 static struct sockaddr_in net_client_addr;
+
+struct timespec last_frame_time = {0, 0};
 
 static dmi_pb_handle_t pb_handle;
 
@@ -116,6 +122,7 @@ stream_in_header_t header;
 uint8_t frame_buf[1000000];
 uint32_t frame_size = 0;
 uint32_t frame_pos = 0;
+uint8_t frame_type = FRAME_TYPE_WAIT;
 
 void handle_data_setup() {
   dmi_pb_start(&pb_handle, connect_header.width, connect_header.height,
@@ -126,6 +133,11 @@ void handle_data_setup() {
   header.is_first_frm = 1;
   header.payload_offset = sizeof(header);
   header.pts = 0;
+
+  frame_size = 0;
+  frame_pos = 0;
+  frame_type = 0xFF;
+  clock_gettime(CLOCK_MONOTONIC, &last_frame_time);
 }
 
 void handle_data() {
@@ -154,6 +166,21 @@ void handle_data() {
     }
 
     frame_pos = 0;
+    header.payload_lenth = frame_size;
+  } else if (frame_type == FRAME_TYPE_WAIT) {
+    recv_len = read(active_fd, &frame_type, sizeof(frame_type));
+
+    if (recv_len == 0) {
+      printf("Connection closed\n");
+      handle_data_exit();
+      return;
+    }
+
+    if (recv_len != sizeof(frame_type)) {
+      printf("Failed to get frame type\n");
+      handle_data_exit();
+      return;
+    }
   } else {
     recv_len = read(active_fd, frame_buf + frame_pos, frame_size - frame_pos);
 
@@ -168,21 +195,37 @@ void handle_data() {
       return;
     }
 
-    header.payload_lenth = frame_size;
-    dmi_pb_send(&pb_handle, &header, frame_buf, frame_size);
+    // Calculate diff since last received frame.
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    uint64_t diff = (now.tv_sec - last_frame_time.tv_sec) * 1000000000 +
+                    (now.tv_nsec - last_frame_time.tv_nsec);
+    last_frame_time = now;
+
+    if (header.is_first_frm != 1 && diff >= connect_header.fps * 50000000 &&
+        frame_type != FRAME_TYPE_I) {
+      printf("Dropping frame, %llums >= 50ms\n", diff / 1000000);
+      sprintf(toast_buf, "Dropping frame, diff: %llums >= 50ms",
+              diff / 1000000);
+      gfx_toast(toast_buf);
+    } else {
+      dmi_pb_send(&pb_handle, &header, frame_buf, frame_size);
+    }
+
     if (header.is_first_frm == 1) {
       gfx_splash_hide();
       header.is_first_frm = 0;
     }
 
     frame_size = 0;
+    frame_type = FRAME_TYPE_WAIT;
 
     // Reset watchdog timer.
     struct itimerspec its = {
         .it_interval = {0, 0},
         .it_value = {3, 0},
     };
-    timerfd_settime(watch_fd, 0, &its, NULL);
+    timerfd_settime(watch_timer_fd, 0, &its, NULL);
   }
 }
 
@@ -259,10 +302,10 @@ int main(int argc, char *argv[]) {
   ep_ev.data.fd = net_listen_fd;
   epoll_ctl(ep_fd, EPOLL_CTL_ADD, ep_ev.data.fd, &ep_ev);
 
-  watch_fd = timerfd_create(CLOCK_MONOTONIC, 0);
+  watch_timer_fd = timerfd_create(CLOCK_MONOTONIC, 0);
   ep_ev.events = EPOLLIN;
-  ep_ev.data.fd = watch_fd;
-  epoll_ctl(ep_fd, EPOLL_CTL_ADD, watch_fd, &ep_ev);
+  ep_ev.data.fd = watch_timer_fd;
+  epoll_ctl(ep_fd, EPOLL_CTL_ADD, watch_timer_fd, &ep_ev);
 
   while (1) {
     int nfds = epoll_wait(ep_fd, &ep_ev, 1, 500);
@@ -301,9 +344,9 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    if (ep_ev.data.fd == watch_fd) {
+    if (ep_ev.data.fd == watch_timer_fd) {
       uint64_t exp;
-      read(watch_fd, &exp, sizeof(exp));
+      read(watch_timer_fd, &exp, sizeof(exp));
       handle_data_exit();
     }
 
